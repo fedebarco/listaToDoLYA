@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 
-class ListaTareasAdapter(listaTareas:MutableList<String>,context: Context): BaseAdapter() {
+class ListaTareasAdapter(listaTitulos:MutableList<String>,listaTareas:MutableList<String>,context: Context): BaseAdapter() {
     var listatareas=listaTareas
+    var listatitulos=listaTitulos
     private val mInflator: LayoutInflater = LayoutInflater.from(context)
     override fun getCount(): Int {
         return listatareas.size
@@ -32,7 +33,7 @@ class ListaTareasAdapter(listaTareas:MutableList<String>,context: Context): Base
             view = convertView
             vh = view.tag as ListRowHolder3
         }
-        vh.descripciontarea.text=listatareas[position]
+        vh.descripciontarea.text=listatitulos[position]
         vh.enunciadoTarea.text=listatareas[position]
         return view
     }

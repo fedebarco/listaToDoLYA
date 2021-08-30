@@ -20,6 +20,12 @@
         android:textColor="@android:color/black"
         android:textSize="32sp"
         android:textStyle="bold" />
+    <Button
+        android:id="@+id/agrega"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nueva tarea"
+        tools:ignore="InvalidId" />
 
     <ListView
         android:id="@+id/tareasenlistada"
