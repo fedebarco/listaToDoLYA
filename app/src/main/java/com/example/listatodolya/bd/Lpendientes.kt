@@ -5,6 +5,7 @@ import androidx.room.PrimaryKey
 data class Lpendientes (
     @PrimaryKey val id:Int,
     val titulo:String,
-    val contenido:String
+    val contenido:String,
+    val hechas:Boolean
 
 )

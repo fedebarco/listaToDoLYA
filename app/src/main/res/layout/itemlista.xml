@@ -9,14 +9,18 @@
     app:cardCornerRadius="8dp"
     android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="8dp">
-
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:padding="8dp"
+            android:orientation="vertical">
 
-        <TextView
+            <TextView
             android:id="@+id/Descripción"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -31,7 +35,7 @@
             android:textStyle="bold"
             tools:ignore="InvalidId" />
 
-        <CheckBox
+            <CheckBox
             android:id="@+id/Enunciado"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,7 +43,14 @@
             android:paddingStart="8dp"
             android:buttonTint="@android:color/darker_gray"
             tools:text="Aqui la tera que se realizara"/>
-
+        </LinearLayout>
+        <ImageButton
+            android:id="@+id/eoe"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/puntos"
+            />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

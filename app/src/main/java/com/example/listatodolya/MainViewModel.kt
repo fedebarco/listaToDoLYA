@@ -11,6 +11,8 @@ import kotlinx.coroutines.launch
 class MainViewModel: ViewModel(){                               //@ViewModelInject constructor(val getRoom:LpendientesDb):ViewModel() {
 
     val tareasP=MutableLiveData<MutableList<Lpendientes>>()
+    val abriryeditar= MutableLiveData<Int>()
+    val eliminar= MutableLiveData<Int>()
 
 
     init {
