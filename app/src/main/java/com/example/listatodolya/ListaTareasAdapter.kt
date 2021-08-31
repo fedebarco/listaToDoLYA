@@ -51,15 +51,14 @@ private class ListRowHolder3(row: View?, lasbaseD: MutableList<String>, position
     val boton: ImageButton = row?.findViewById(R.id.eoe) as ImageButton
     init {
         enunciadoTarea.setOnCheckedChangeListener { buttonView, isChecked ->
-            if (isChecked){
-                val lista=model.tareasP.value!!
-                val elque=lista[position1]
-                val reemplazo=Lpendientes(elque.id,elque.titulo,elque.contenido,isChecked)
-                lista.set(position1,reemplazo)
-            }
+            val lista=model.tareasP.value!!
+            val elque=lista[position1]
+            val reemplazo=Lpendientes(elque.id,elque.titulo,elque.contenido,isChecked)
+            //model.actualizar.postValue(reemplazo)
+
         }
         boton.setOnClickListener {
-            model.abriryeditar.postValue(ides2[position1])
+            model.abriryeditar.postValue(position1)
         }
     }
 

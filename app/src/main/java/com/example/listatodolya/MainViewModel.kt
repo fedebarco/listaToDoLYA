@@ -13,6 +13,7 @@ class MainViewModel: ViewModel(){                               //@ViewModelInje
     val tareasP=MutableLiveData<MutableList<Lpendientes>>()
     val abriryeditar= MutableLiveData<Int>()
     val eliminar= MutableLiveData<Int>()
+    val actualizar= MutableLiveData<Lpendientes>()
 
 
     init {

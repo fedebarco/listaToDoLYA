@@ -65,13 +65,21 @@ class MainActivity : AppCompatActivity() {
             eliminaocambia.show(supportFragmentManager,"Nuevatarea")
 
         })
+
         model.eliminar.observe(this,{
             lifecycleScope.launch {
                 local.lpendientesDao().delete(local.lpendientesDao().obtenerID(it))
                 val datos=local.lpendientesDao().obtenerTareas()
                 model.tareasP.postValue(datos)
             }
+        })
 
+        model.actualizar.observe(this,{
+            lifecycleScope.launch {
+                local.lpendientesDao().update(it)
+                val datos=local.lpendientesDao().obtenerTareas()
+                model.tareasP.postValue(datos)
+            }
         })
 
 
