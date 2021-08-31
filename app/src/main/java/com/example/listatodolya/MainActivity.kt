@@ -11,19 +11,27 @@ import androidx.lifecycle.lifecycleScope
 import com.example.listatodolya.bd.Lpendientes
 import com.example.listatodolya.bd.LpendientesDb
 import com.example.listatodolya.databinding.ActivityMainBinding
+import com.example.listatodolya.internet.APIService
+import com.example.listatodolya.internet.gatosresponse
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
+    val model:MainViewModel by viewModels()
+    var tareas= mutableListOf<Lpendientes>()
     @Inject lateinit var local: LpendientesDb
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        val model:MainViewModel by viewModels()
-        var tareas= mutableListOf<Lpendientes>()
 
         lifecycleScope.launch {
             val datos=local.lpendientesDao().obtenerTareas()
@@ -57,6 +65,21 @@ class MainActivity : AppCompatActivity() {
             }
 
 
+        }
+
+        binding.gatos.setOnClickListener {
+            val dialog= AlertDialog.Builder(this)
+            val dialogView=layoutInflater.inflate(R.layout.gatitosagrega,null)
+            val etgat=dialogView.findViewById<EditText>(R.id.gatiET)
+            dialog.setView(dialogView)
+            dialog.setPositiveButton("gatos",{ dialogInterface: DialogInterface, i: Int -> })
+            dialog.setNegativeButton("cerrar",{ dialogInterface: DialogInterface, i: Int -> })
+            val customDialog=dialog.create()
+            customDialog.show()
+            customDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                buscarPorNumero(etgat.text.toString().toInt())
+                customDialog.dismiss()
+            }
         }
 
 
@@ -106,5 +129,29 @@ class MainActivity : AppCompatActivity() {
         })
 
 
+    }
+    private fun getRetrofit():Retrofit{
+       return Retrofit.Builder()
+           .baseUrl("https://catfact.ninja/")
+           .addConverterFactory(GsonConverterFactory.create())
+           .build()
+    }
+    private fun buscarPorNumero(number:Int){
+        CoroutineScope(Dispatchers.IO).launch {
+            val call: Response<gatosresponse> =getRetrofit().create(APIService::class.java).obtenerFrasesGatos("fact?max_length=140")
+            val puppies = call.body()
+            runOnUiThread {
+                for (i in 1..number){
+                if(call.isSuccessful){
+                    val respgatos=puppies?.frase?.toString()?: ""
+                    val actrepuesta=Lpendientes(tareas.size+1,"frase gato:",respgatos,false)
+                    val actuales=model.tareasP.value!!
+                    actuales.add(actrepuesta)
+                    model.tareasP.postValue(actuales)
+                }else{
+                //show error
+                }}
+            }
+        }
     }
 }

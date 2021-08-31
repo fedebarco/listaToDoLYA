@@ -26,6 +26,12 @@
         android:layout_height="wrap_content"
         android:text="Nueva tarea"
         tools:ignore="InvalidId" />
+    <Button
+        android:id="@+id/gatos"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="gatos"
+        tools:ignore="InvalidId" />
 
     <ListView
         android:id="@+id/tareasenlistada"
