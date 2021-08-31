@@ -5,6 +5,7 @@ import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.SearchView
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +22,7 @@ import kotlinx.coroutines.launch
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Locale.filter
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -81,6 +83,129 @@ class MainActivity : AppCompatActivity() {
                 customDialog.dismiss()
             }
         }
+        binding.searchView.setOnQueryTextListener(object  : SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                binding.searchView.clearFocus()
+                var titulos= mutableListOf<String>()
+                for (n in tareas){
+                    titulos.add(n.titulo)
+                }
+                if (titulos.filter {s -> s == query}.isNullOrEmpty()){
+
+                }else{
+
+                    var busqueda=titulos.filter {s -> s == query}
+                    val listafiltrada= mutableListOf<Lpendientes>()
+                    for (y in busqueda){
+                        for(j in tareas){
+                            if (y==j.titulo){
+                                listafiltrada.add(j)
+                            }
+                        }
+                    }
+                    var ides= mutableListOf<Int>()
+                    var titulos= mutableListOf<String>()
+                    var contenidos= mutableListOf<String>()
+                    var chequeada= mutableListOf<Boolean>()
+                    for (i in listafiltrada){
+                        ides.add(i.id)
+                    }
+                    for (i in listafiltrada){
+                        titulos.add(i.titulo)
+                    }
+                    for (i in listafiltrada){
+                        contenidos.add(i.contenido)
+                    }
+                    for (i in listafiltrada){
+                        chequeada.add(i.hechas)
+                    }
+                    val adaptadora=ListaTareasAdapter(ides,titulos,contenidos,chequeada,this@MainActivity,model)
+                    binding.tareasenlistada.adapter=adaptadora
+
+                }
+
+
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                var titulos= mutableListOf<String>()
+                for (n in tareas){
+                    titulos.add(n.titulo)
+                }
+                if (titulos.filter { s -> s.toLowerCase().contains(newText!!)}.isNullOrEmpty()){
+                    if (titulos.filter { s -> s.toLowerCase().contains(newText!!)}.isEmpty()){
+                        var ides = mutableListOf<Int>()
+                        var titulos = mutableListOf<String>()
+                        var contenidos = mutableListOf<String>()
+                        var chequeada = mutableListOf<Boolean>()
+                        for (i in tareas) {
+                            ides.add(i.id)
+                        }
+                        for (i in tareas) {
+                            titulos.add(i.titulo)
+                        }
+                        for (i in tareas) {
+                            contenidos.add(i.contenido)
+                        }
+                        for (i in tareas) {
+                            chequeada.add(i.hechas)
+                        }
+                        val adaptadora = ListaTareasAdapter(
+                            ides,
+                            titulos,
+                            contenidos,
+                            chequeada,
+                            this@MainActivity,
+                            model
+                        )
+                        binding.tareasenlistada.adapter = adaptadora
+
+                    }
+
+                } else{
+                    var busqueda = titulos.filter { s -> s.toLowerCase().contains(newText!!)}
+                    val listafiltrada = mutableListOf<Lpendientes>()
+                    for (y in busqueda) {
+                        for (j in tareas) {
+                            if (y == j.titulo) {
+                                listafiltrada.add(j)
+                            }
+                        }
+                    }
+                    var ides = mutableListOf<Int>()
+                    var titulos = mutableListOf<String>()
+                    var contenidos = mutableListOf<String>()
+                    var chequeada = mutableListOf<Boolean>()
+                    for (i in listafiltrada) {
+                        ides.add(i.id)
+                    }
+                    for (i in listafiltrada) {
+                        titulos.add(i.titulo)
+                    }
+                    for (i in listafiltrada) {
+                        contenidos.add(i.contenido)
+                    }
+                    for (i in listafiltrada) {
+                        chequeada.add(i.hechas)
+                    }
+                    val adaptadora = ListaTareasAdapter(
+                        ides,
+                        titulos,
+                        contenidos,
+                        chequeada,
+                        this@MainActivity,
+                        model
+                    )
+                    binding.tareasenlistada.adapter = adaptadora
+                }
+
+
+                    return false
+            }
+
+
+        })
 
 
         model.abriryeditar.observe(this,{
@@ -138,20 +263,25 @@ class MainActivity : AppCompatActivity() {
     }
     private fun buscarPorNumero(number:Int){
         CoroutineScope(Dispatchers.IO).launch {
+            for (i in 1..number) {
             val call: Response<gatosresponse> =getRetrofit().create(APIService::class.java).obtenerFrasesGatos("fact?max_length=140")
             val puppies = call.body()
             runOnUiThread {
-                for (i in 1..number){
-                if(call.isSuccessful){
-                    val respgatos=puppies?.frase?.toString()?: ""
-                    val actrepuesta=Lpendientes(tareas.size+1,"frase gato:",respgatos,false)
-                    val actuales=model.tareasP.value!!
-                    actuales.add(actrepuesta)
-                    model.tareasP.postValue(actuales)
-                }else{
-                //show error
-                }}
+                    if (call.isSuccessful) {
+                        val respgatos = puppies?.frase?.toString() ?: ""
+                        val actrepuesta =
+                            Lpendientes(tareas.size + 1, "frase gato:", respgatos, false)
+                        //local.lpendientesDao().inserte(actrepuesta)
+                            val actuales = model.tareasP.value!!
+                            actuales.add(actrepuesta)
+                            model.tareasP.postValue(actuales)
+
+                    } else {
+                        //show error
+                    }
+                }
             }
+
         }
     }
 }
